@@ -1,0 +1,11 @@
+# what is pip?
+Pip is a package management system used to install and manage software packages written in Python. It allows users to easily download and install libraries and dependencies from the Python Package Index (PyPI) or other repositories. Pip simplifies the process of managing Python packages, making it easier for developers to share and reuse code.
+
+# what is uvicorn?
+Uvicorn is a lightning-fast ASGI server implementation for Python web applications. It is designed to serve asynchronous web frameworks, such as FastAPI and Starlette, and provides high performance and low latency for handling HTTP requests. Uvicorn is built on top of the asyncio library and supports features like WebSockets, HTTP/2, and background tasks, making it a popular choice for building modern web applications in Python.
+
+# what is asgi?
+ASGI (Asynchronous Server Gateway Interface) is a specification that defines a standard interface between asynchronous Python web applications and web servers. It allows for the development of asynchronous web applications that can handle multiple requests concurrently, improving performance and scalability. ASGI is designed to support long-lived connections, such as WebSockets, and is compatible with various asynchronous frameworks like FastAPI, Starlette, and Django Channels. It serves as a successor to WSGI (Web Server Gateway Interface), which is synchronous and does not support asynchronous features.
+
+# what are flags?
+Flags are command-line options or parameters that can be passed to a program or script to modify its behavior or provide additional information. In the context of programming and software development, flags are often used to enable or disable specific features, set configuration options, or control the execution flow of a program. They are typically represented by a single character preceded by a hyphen (e.g., -h for help) or by a longer name preceded by two hyphens (e.g., --verbose). Flags can be used in various programming languages and command-line interfaces to customize the behavior of applications and scripts.
