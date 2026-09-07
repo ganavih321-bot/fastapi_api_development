@@ -22,7 +22,7 @@ def find_post(id):
 def find_index_post(id):
     for i, p in enumerate(my_posts):
         if p['id']== id:
-            return p
+            return i
         
 
 @app.get("/")
