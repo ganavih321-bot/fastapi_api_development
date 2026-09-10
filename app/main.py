@@ -51,10 +51,9 @@ def get_posts():
 
 @app.post("/posts",status_code=status.HTTP_201_CREATED)
 def create_posts(post:Post):
-    post_model_dump=post.model_dump()
-    post_model_dump['id']=randrange(0,1000000)
-    my_posts.append(post_model_dump)
-    return{"data":post_model_dump}
+    cursor.execute("""INSERT INTO posts(title,content,published) VALUES (%s,%s,%s) RETURNING* """, (post.title,post.content,post.published))
+    new_post = cursor.fetchone()
+    return{"data":"created post"}
 
 
 @app.get("/posts/{id}")
