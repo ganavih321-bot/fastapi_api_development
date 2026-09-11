@@ -5,7 +5,9 @@ from typing import Optional
 from random import randrange
 import psycopg2
 from psycopg2.extras import RealDictCursor
+# RealDictCursor is used to get the data in dictionary format instead of tuple format
 import time
+
 
 app= FastAPI()
 
@@ -17,6 +19,7 @@ class Post(BaseModel):
 while True:
     try:
         conn = psycopg2.connect(host='localhost',database='fastapi',user='postgres',password='ganavih123',cursor_factory=RealDictCursor)
+
         cursor = conn.cursor()
         print("Database connection was succesfull!")
         break
@@ -50,15 +53,17 @@ def get_posts():
     return{"data": posts}
 
 @app.post("/posts",status_code=status.HTTP_201_CREATED)
-def create_posts(post:Post):
+def create_posts(post:Post): 
     cursor.execute("""INSERT INTO posts(title,content,published) VALUES (%s,%s,%s) RETURNING* """, (post.title,post.content,post.published))
     new_post = cursor.fetchone()
-    return{"data":"created post"}
+    conn.commit()
+    return{"data":new_post}
 
 
 @app.get("/posts/{id}")
-def get_post(id: int):
-    post = find_post(id)
+def get_post(id: str):
+    cursor.execute("""select * from posts WHERE id=%s""",str((id)))
+    post=cursor.fetchone()
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
                             detail=f"post with id: {id} was not found")
@@ -66,8 +71,10 @@ def get_post(id: int):
 
 @app.delete("/posts/{id}",status_code=status.HTTP_204_NO_CONTENT)
 def delete_post(id: int):
-    index = find_index_post(id)
-    if index==None:
+    cursor.execute("""DELETE FROM posts WHERE id=%s returning* """,(str(id),))
+    delete_post =  cursor.fetchone()
+    conn.commit()
+    if delete_post==None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
                             detail=f"post with id: {id} does not exist")                        
     my_posts.pop(index)
@@ -75,12 +82,14 @@ def delete_post(id: int):
 
 @app.put("/posts/{id}")
 def update_post(id:int ,post:Post):
-        index = find_index_post(id)
+        
+        cursor.execute("""UPDATE posts SET title=%s,content=%s,published=%s WHERE id=%s returning*""",(post.title,post.content,post.published,str(id)))
 
-        if index==None:
+        updated_post=cursor.fetchone()
+        conn.commit()
+
+        if updated_post==None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
                             detail=f"post with id: {id} does not exist") 
-        post_model_dump=post.model_dump()
-        post_model_dump['id']=id
-        my_posts[index]=post_model_dump
-        return {"data":post_model_dump}
+        
+        return {"data":updated_post}
