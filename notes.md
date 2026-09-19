@@ -79,9 +79,20 @@
 - Queries can be made exclusively through python code. No SQL is required. The ORM will handle the translation of the python code into SQL queries and execute them against the database.
 
 
-`SQLALCHEMY`
+## SQLALCHEMY
 
 - Sqlalchemy is one of the most popular python ORMs
 - It is a standalone library and has no association with FastAPI. It can be used with any other python web frameworks or any python based application
-- https://www.sqlalchemy.org/
+- `https://www.sqlalchemy.org/`
 
+
+## synchronize_session
+- The synchronize_session parameter in FastAPI (via SQLAlchemy) controls how an in-memory ORM session updates its local cache after executing a bulk update() or delete() query directly on the database. 
+
+## Schema Models
+- Schema/pydantic models define the structure of a request and response 
+- this ensure that when a user wants to create a post, the request will only go through if it has a "title" a "content" in the body
+
+## sqlalchemy models
+- responsible for defining the columns of our "posts" table within postgres
+- is used to query,create,delete and update entries within the database 
