@@ -96,3 +96,15 @@
 ## sqlalchemy models
 - responsible for defining the columns of our "posts" table within postgres
 - is used to query,create,delete and update entries within the database 
+
+## Password Hashing
+- Hashing means converting some context (a password in this case) into a sequence of bytes (just a string) that looks like gibberish
+
+# Why use password hashing?
+- If your database is stolen, the thief won't have your users' plaintext passwords, only the hashes.
+
+- So, the thief won't be able to try to use that password in another system (as many users use the same password everywhere, this would be dangerous).
+
+## pwdlib
+- pwdlib is a great python package to handle password hashes.
+- it supports many secure hashing algorithms and utilities to work with them.

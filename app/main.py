@@ -2,6 +2,7 @@ from typing import Optional,List
 from fastapi import Depends, FastAPI, Response, status, HTTPException
 from fastapi.params import Body
 from pydantic import BaseModel
+from passlib.context import CryptContext
 from random import randrange
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -12,6 +13,8 @@ from sqlalchemy.sql.functions import mode
 from . import models,schemas
 from .database import engine,get_db
 
+
+pwd_context=CryptContext(schemas=["bcrypt"],deprecated="auto")
 models.Base.metadata.create_all(bind=engine)
 
 
@@ -109,3 +112,14 @@ def update_post(id:int ,updated_post:schemas.PostCreate,db:Session=Depends(get_d
         post_query.update(updated_post.dict(),synchronize_session=False)
         db.commit()
         return post_query.first()
+
+@app.post("/users",status_code=status.HTTP_201_CREATED,response_model=schemas.UserOut)
+def create_user(user: schemas.UserCreate,db:Session=Depends(get_db)):
+    hashed_password=pwd_context.hash(user.password)
+    user.password = hashed_password
+    new_user=models.User(**user.model_dump())
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    return new_user
