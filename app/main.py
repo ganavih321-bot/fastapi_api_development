@@ -14,7 +14,7 @@ from . import models,schemas
 from .database import engine,get_db
 
 
-pwd_context=CryptContext(schemas=["bcrypt"],deprecated="auto")
+pwd_context=CryptContext(schemes=["bcrypt"],deprecated="auto")
 models.Base.metadata.create_all(bind=engine)
 
 
